@@ -1,0 +1,16 @@
+{
+  "name": "CertiTrack Plus",
+  "short_name": "CertiTrack Plus",
+  "description": "Certification and compliance control for oilfield and industrial equipment.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a7fd1",
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "scope": "./"
+}

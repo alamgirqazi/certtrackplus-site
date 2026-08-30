@@ -1,0 +1,110 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race. In-progress runs are cancelled so the newest
+# push wins rather than an older build landing last.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Resolves where Pages will actually serve this repo from, and exposes it
+      # as outputs. That is what makes the base path automatic: a PROJECT page
+      # serves from https://owner.github.io/repo, so every asset needs a
+      # `/repo` prefix, while a user/org page or a custom domain needs none.
+      # Deriving it here means there is nothing to configure by hand and
+      # nothing to get wrong when the repo is renamed.
+      - name: Configure Pages
+        id: pages
+        uses: actions/configure-pages@v5
+        with:
+          # Turns Pages on via the API if it has not been enabled yet, so the
+          # very first push does not fail on an unconfigured repo.
+          enablement: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Cheap, and it fails the deploy on a type error instead of shipping a
+      # broken page. The static export would otherwise happily build.
+      - name: Typecheck and lint
+        run: |
+          npx tsc --noEmit
+          npm run lint
+
+      # The page falls back to drawn panels when a screenshot is missing, which
+      # is deliberate — but it is silent. Printing the manifest means a missing
+      # PNG shows up in the build log instead of as a surprise on the live site.
+      - name: Report captured screenshots
+        run: |
+          if compgen -G "public/screens/*.png" > /dev/null; then
+            echo "Screenshots included in this build:"
+            ls -1sh public/screens/*.png
+          else
+            echo "::warning::No screenshots in public/screens/ — the page will"
+            echo "::warning::render its drawn fallback panels. Run 'npm run screens'"
+            echo "::warning::locally and commit the PNGs if that is not intended."
+          fi
+
+      # Resolved in a step rather than inline, because `a && b || c` cannot
+      # express "an override that is deliberately empty": with a custom domain
+      # you set NEXT_PUBLIC_SITE_URL and leave NEXT_PUBLIC_BASE_PATH blank, and
+      # the `||` would then fall through to the Pages-derived `/repo` prefix and
+      # break every asset URL. An explicit if/else keeps a blank override blank.
+      #
+      # With no repository variables set at all — the default — both values come
+      # from the Pages configuration above and there is nothing to configure.
+      - name: Resolve site URL and base path
+        env:
+          VAR_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+          VAR_BASE: ${{ vars.NEXT_PUBLIC_BASE_PATH }}
+          PAGES_URL: ${{ steps.pages.outputs.base_url }}
+          PAGES_BASE: ${{ steps.pages.outputs.base_path }}
+        run: |
+          if [ -n "$VAR_URL" ]; then
+            echo "Using repository variables (override)"
+            echo "NEXT_PUBLIC_SITE_URL=$VAR_URL"
+            echo "NEXT_PUBLIC_BASE_PATH=$VAR_BASE"
+          else
+            echo "Using values derived from the Pages configuration"
+            echo "NEXT_PUBLIC_SITE_URL=$PAGES_URL"
+            echo "NEXT_PUBLIC_BASE_PATH=$PAGES_BASE"
+          fi >> "$GITHUB_ENV"
+          echo "site url:  ${VAR_URL:-$PAGES_URL}"
+          echo "base path: ${VAR_URL:+$VAR_BASE}${VAR_URL:-$PAGES_BASE}"
+
+      - name: Build static site
+        run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

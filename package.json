@@ -1,0 +1,33 @@
+{
+  "name": "certitrackplus-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "serve out",
+    "preview": "next build && serve out",
+    "lint": "eslint",
+    "screens": "node scripts/capture-screens.mjs",
+    "screens:login": "node scripts/capture-screens.mjs --login",
+    "assets": "node scripts/generate-assets.mjs"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "next": "15.5.23"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.23",
+    "playwright": "^1.62.1",
+    "serve": "^14.2.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
