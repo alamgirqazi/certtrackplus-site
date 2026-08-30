@@ -81,16 +81,25 @@ jobs:
           PAGES_BASE: ${{ steps.pages.outputs.base_path }}
         run: |
           if [ -n "$VAR_URL" ]; then
+            SITE_URL="$VAR_URL"
+            BASE_PATH="$VAR_BASE"
             echo "Using repository variables (override)"
-            echo "NEXT_PUBLIC_SITE_URL=$VAR_URL"
-            echo "NEXT_PUBLIC_BASE_PATH=$VAR_BASE"
           else
+            SITE_URL="$PAGES_URL"
+            BASE_PATH="$PAGES_BASE"
             echo "Using values derived from the Pages configuration"
-            echo "NEXT_PUBLIC_SITE_URL=$PAGES_URL"
-            echo "NEXT_PUBLIC_BASE_PATH=$PAGES_BASE"
-          fi >> "$GITHUB_ENV"
-          echo "site url:  ${VAR_URL:-$PAGES_URL}"
-          echo "base path: ${VAR_URL:+$VAR_BASE}${VAR_URL:-$PAGES_BASE}"
+          fi
+
+          echo "site url:  $SITE_URL"
+          echo "base path: ${BASE_PATH:-(none)}"
+
+          # Only KEY=VALUE lines may go to $GITHUB_ENV. Redirecting the whole
+          # if/else block sends the log lines there too, and the runner rejects
+          # the file with "Invalid format".
+          {
+            echo "NEXT_PUBLIC_SITE_URL=$SITE_URL"
+            echo "NEXT_PUBLIC_BASE_PATH=$BASE_PATH"
+          } >> "$GITHUB_ENV"
 
       - name: Build static site
         run: npm run build
