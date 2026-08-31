@@ -221,8 +221,7 @@ export const en = {
     title: "Talk to us about your register.",
     lead:
       "Tell us what you manage — the unit types, roughly how much equipment, and what you use today — and we will show CertiTrack Plus against it.",
-    emailLabel: "Sales",
-    supportLabel: "Support",
+    emailLabel: "Email",
     responseNote: "We reply within one business day.",
     appLabel: "Existing customer?",
     appBody: "Sign in to your account.",

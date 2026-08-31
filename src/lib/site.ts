@@ -28,8 +28,8 @@ export const site = {
   domain: "certitrackplus.com",
   url: resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL, "https://certitrackplus.com"),
   tagline: "Certification and compliance control for oilfield equipment",
-  email: "sales@reispeq.com",
-  supportEmail: "support@reispeq.com",
+  /** The single published address. Sales and support both land here. */
+  email: "support@certitrackplus.com",
   /** Where the application itself currently lives. See the note above. */
   app: {
     url: "https://certitrackplus.com",

@@ -30,7 +30,7 @@ npm run lint
 
 npm run screens:login  # once — sign in, session saved
 npm run screens        # capture app screenshots
-npm run assets         # regenerate og.png + apple-touch-icon.png
+npm run assets         # regenerate og.png from the brand logo
 ```
 
 Note that `npm start` serves the **exported** `out/` directory with `serve` —
@@ -245,6 +245,30 @@ Nothing here is Pages-specific: the output is a plain `out/` directory.
 Cloudflare Pages, Netlify, S3 or nginx all work with build command
 `npm run build` and output directory `out`.
 
+## Brand assets
+
+`public/certitrackplus-logo.svg` is the supplied CertiTrack lockup and is the
+source of truth. `src/components/logo.tsx` is transcribed from it — droplet
+mark plus the "CertiTRACK" wordmark, navy `#104378` and azure `#2492EB`.
+
+Two things about that component are deliberate:
+
+- **Brand colours are hard-coded.** It is supplied artwork, not a themeable
+  icon. Both current placements are on light backgrounds; a knockout version
+  needs artwork from the brand owner, not a CSS override.
+- **`idSuffix` is required per instance.** The artwork depends on a
+  `<clipPath>`, and ids must be unique per document. The clip is load-bearing —
+  removing it lets the droplet's tip overshoot — so it cannot just be dropped.
+  The header passes `hdr`, the footer `ftr`. Add a third placement and give it
+  its own suffix.
+
+`favicon-16x16.png`, `favicon-32x32.png` and `apple-touch-icon.png` are
+**supplied artwork**. `npm run assets` does not touch them; it only regenerates
+`og.png`, and it reads the logo SVG so the card cannot drift from the real mark.
+
+Note there is no `src/app/icon.svg`. Next serves that filename automatically as
+the favicon and it would silently override the PNGs declared in metadata.
+
 ## Adding Arabic
 
 The site is locale-segmented (`/en/…`), matching reispeq.com. To add Arabic:
@@ -273,8 +297,10 @@ Copy `.env.example` to `.env.local`:
 
 ## Before launch
 
-- [ ] Confirm `sales@reispeq.com` and `support@reispeq.com` are monitored —
-      they are the only way to reach you from the site. There is no form.
+- [ ] **Create `support@certitrackplus.com` and confirm it is monitored.** It is
+      the only address on the site and the only way to reach you from it — there
+      is no form. Verify it actually receives mail before launch; the domain's
+      MX records may not be set up for it yet.
 - [ ] **The app and this site both want the apex.** `site.app.url` currently
       points at `https://certitrackplus.com` because the application still
       lives there — which means every "Sign in" link on this site points at

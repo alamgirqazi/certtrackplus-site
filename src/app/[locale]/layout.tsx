@@ -26,7 +26,7 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#1a7fd1",
+  themeColor: "#104378",
   colorScheme: "light",
 };
 
@@ -61,7 +61,10 @@ export async function generateMetadata({
       googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
     },
     icons: {
-      icon: [{ url: asset("/icon.svg"), type: "image/svg+xml" }],
+      icon: [
+        { url: asset("/favicon-32x32.png"), sizes: "32x32", type: "image/png" },
+        { url: asset("/favicon-16x16.png"), sizes: "16x16", type: "image/png" },
+      ],
       apple: [{ url: asset("/apple-touch-icon.png"), sizes: "180x180", type: "image/png" }],
     },
     manifest: asset("/site.webmanifest"),

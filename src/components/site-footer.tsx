@@ -14,7 +14,7 @@ export function SiteFooter({ locale }: { locale: Locale }) {
       <div className="u-shell py-12 lg:py-14">
         <div className="grid gap-10 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <CertiTrackLogo />
+            <CertiTrackLogo idSuffix="ftr" className="h-8 w-auto" />
             <p className="u-pretty mt-5 max-w-sm text-[14px] leading-relaxed text-muted">{t.footer.tagline}</p>
           </div>
 

@@ -15,7 +15,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur-md">
         <div className="u-shell flex h-[var(--header-h)] items-center justify-between gap-6">
           <Link href={href(locale, "home")} aria-label={site.name} className="shrink-0">
-            <CertiTrackLogo />
+            <CertiTrackLogo idSuffix="hdr" className="h-7 w-auto" />
           </Link>
 
           <div className="flex items-center gap-2">

@@ -371,29 +371,16 @@ export default async function HomePage({ params }: Props) {
 
         <div className="mt-10 grid gap-10 lg:grid-cols-12 lg:gap-14">
           <div className="lg:col-span-5">
-            <dl className="space-y-4 text-[15px]">
-              <div>
-                <dt className="text-[12.5px] font-medium text-muted">{t.contact.emailLabel}</dt>
-                <dd className="mt-1">
-                  <a
-                    href={`mailto:${site.email}`}
-                    className="font-semibold text-azure-600 underline-offset-4 hover:underline"
-                  >
-                    {site.email}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-[12.5px] font-medium text-muted">{t.contact.supportLabel}</dt>
-                <dd className="mt-1">
-                  <a
-                    href={`mailto:${site.supportEmail}`}
-                    className="font-semibold text-azure-600 underline-offset-4 hover:underline"
-                  >
-                    {site.supportEmail}
-                  </a>
-                </dd>
-              </div>
+            <dl className="text-[15px]">
+              <dt className="text-[12.5px] font-medium text-muted">{t.contact.emailLabel}</dt>
+              <dd className="mt-1">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="text-[17px] font-semibold text-azure-600 underline-offset-4 hover:underline"
+                >
+                  {site.email}
+                </a>
+              </dd>
             </dl>
             <p className="mt-5 text-[14px] leading-relaxed text-muted">{t.contact.responseNote}</p>
           </div>
